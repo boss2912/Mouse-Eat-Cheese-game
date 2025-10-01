@@ -68,22 +68,30 @@ void setup() {
 
 void loop() {
  // ส่งไปที่ Slave #1
-  Wire.beginTransmission(1);
-  Wire.write("Hello 1");
-  Wire.endTransmission();
-  delay(500);
+  char key = keypad.getKey();  // อ่านค่าปุ่มกด
 
-  // ส่งไปที่ Slave #2
-  Wire.beginTransmission(2);
-  Wire.write("Hello 2");
-  Wire.endTransmission();
-  delay(500);
+  if (key) { // ถ้ามีการกดจริง
+    Serial.print("กดปุ่ม: ");
+    Serial.println(key);
 
-  //  ส่งไปที่ Slave #3
-  Wire.beginTransmission(3);
-  Wire.write("Hello 3");
-  Wire.endTransmission();
-  delay(500);
+    if (key == '1') {
+      // ส่งคำสั่งไปยัง Slave #1 ให้เปิด LED
+      Wire.beginTransmission(1);
+      Wire.write("LED_ON");
+      Wire.endTransmission();
+    }
+    else if (key == '0') {
+      // ส่งคำสั่งไปยัง Slave #1 ให้ปิด LED
+      Wire.beginTransmission(1);
+      Wire.write("LED_OFF");
+      Wire.endTransmission();
+    }
+    else if (key >= '0' && key <= '9') {
+      // กดตัวเลข 0–9 → ส่งคำสั่งให้ Motor สั่น
+      Wire.beginTransmission(1);
+      Wire.write("Motor_on");
+      Wire.endTransmission();
+    }
   
   char customKey = customKeypad.getKey();
   if (customKey) {
